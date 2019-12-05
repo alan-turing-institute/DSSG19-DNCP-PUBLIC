@@ -1,0 +1,113 @@
+user_metadata:
+    label_definition:
+    team:
+    author: 'wennnasdsaasdsdasdasdsdas'
+
+cohort_config:
+    name: 'test_cohort'
+    tender_type:
+    query: |
+        select id_llamado::int from semantic.tenders
+        limit 2000
+
+label_config:
+    name: 'effective_complaint'
+    query : 'bool_of_effective_complaints'
+
+features:
+    -
+        table: 'semantic.tenders'
+        columns:
+          - log_amt_planned_real_guarani
+          # - tipo_procedimiento
+
+    -
+        table: 'semantic.tenders_procurement_type'
+        columns:
+          - tp_n_complaints
+          - tp_n_eff_complaints
+          # - tp_n_cancelled_complaints
+          # - tp_n_tenders_complaints
+          # - tp_n_tenders_eff_complaints
+          # - tp_n_tenders
+          # - tp_avg_log_planned_real_value
+          # - tp_median_log_planned_real_value
+          # - tp_quarter_percentil_log_planned_real_value
+          # - tp_seventy_five_percentil_log_planned_real_value
+          # - tp_two_percentil_log_planned_real_value
+          # - tp_ninety_eight_percentil_log_planned_real_value
+          # - tp_total_n_bidders
+          # - tp_avg_n_bidders
+          # - tp_median_n_bidders
+          # - tp_missing_bidders_data
+          # - tp_unique_number_products
+          # - tp_mean_number_products
+          # - tp_median_number_products
+          # - tp_p25_number_products
+          # - tp_p75_number_products
+          # # - tp_high_risk_bool
+          # - tp_n_complaints_3m
+          # - tp_n_eff_complaints_3m
+          # - tp_n_tenders_complaints_3m
+          # - tp_n_tenders_eff_complaints_3m
+
+
+validation:
+    method: 'temporal-folding'
+    parameters:
+        as_of_date: '2013-01-01'
+        train_lag: 'all'
+        test_lag: 365
+        aod_lag: 182
+        blind_gap: 90
+        number_of_folds: null
+        test_date_limit: '2019-01-31'
+
+textprocessing:
+    tfidf:
+        max_df: 1.0
+        max_features: 100
+        #ngram_range: (1, 1)
+        norm: 'l2'
+
+metrics:
+    - recall
+    - precision
+
+model_config:
+    random_seed: 22
+    max_seconds: 300 # 5 minutes max runtime
+
+approaches:
+
+    # -
+    #     approach_name: 'ada_boost'
+    #     file_path: 'generic_approach.py'
+    #     preprocessors: ['StandardScaler']
+    #     hyperparameters:
+    #       algorithm:
+    #       - SAMME
+    #       - SAMME.R
+    #       n_estimators:
+    #       - 1
+    #       - 10
+    #       - 10000
+    -
+        approach_name: 'decision_tree'
+        file_path: 'generic_approach.py'
+        preprocessors: ['StandardScaler', 'OneHotEncoder']
+        hyperparameters:
+          criterion:
+          - gini
+          - entropy
+          max_depth:
+          - 1
+          - 5
+          - 10
+          - 50
+          max_features:
+          - null
+          min_samples_split:
+          - 2
+          - 5
+          - 10

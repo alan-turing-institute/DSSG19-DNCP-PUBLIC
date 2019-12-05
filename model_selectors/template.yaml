@@ -1,0 +1,77 @@
+# List of rules to filter the table experiments.evaluations.
+#
+# One rule orders a list of learners according to an statistic that is 
+# applied to all folds of a given experiment. Then, it orders it given
+# the higher_is_better paramenter. Finally, the top is used to cut the list.
+#
+# Parameters:
+# ----------
+# metric: string
+#       It accepts any implemented metric, i.e., precision, recall, acurracy.
+#       See pipeline/evaluation.py.
+#
+# filter: dict
+#       type: str
+#          It can be `threshold` or `top`
+#       value: number
+#           A number to filter by
+#
+#       It filters the statistic of the metrix by threshold or top. 
+#
+# statistic: string
+#       Any statistic accepted by pd.Groupby.agg function.
+#       Some examples are: mean, median, std, sum, min, max, skew, kurt, sem, var
+#
+# higher_is_better: boolean
+#       Teels the algorithm how to order the list given the statistic of the metric.
+#       If the metric is good with high values, then, this parameter should be true
+
+rules:
+    - 
+        metric: 'recall'
+        filter: 
+            type: threshold
+            value: 0.2
+        statistic: mean
+        higher_is_better: true
+    - 
+        metric: 'recall'
+        filter: 
+            type: threshold
+            value: 0.05
+        statistic: min
+        higher_is_better: true
+    -
+        metric: 'precision'
+        filter: 
+            type: top
+            value: 5
+        statistic: mean
+        higher_is_better: true
+    - 
+        metric: 'recall'
+        filter: 
+            type: threshold
+            value: 0.1
+        statistic: min
+        higher_is_better: true
+        
+# Selector is a set of rules to be applied to an experiment result.         
+# One can build multiple selectors with different rules. 
+# 
+# To build a selector, you need to declare the order that you want the rules
+# above to be applied. For instance, a selector can use the rules in the following order:
+#  1 -> 3 -> 2. Or it can be as simple as one rule: 1
+#
+# This chains are defined by a list, [1, 3, 2] or [1], that has to be added to the order key
+# for each selector.
+
+selectors:
+    -
+        order: [1, 2, 3]
+    -
+        order: [1]
+    -
+        order: [4]
+    -
+        order: [2]

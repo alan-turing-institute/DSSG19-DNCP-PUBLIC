@@ -1,0 +1,415 @@
+user_metadata:
+    label_definition:
+    team:
+    author: 'wen'
+
+cohort_config:
+    name: 'test_cohort'
+    tender_type:
+    query: |
+        select td.id_llamado from (
+            (select id_llamado from semantic.tenders
+            where tipo_procedimiento_codigo = 'CD') as td
+          inner join 
+            (select id_llamado from semantic.documents
+            where is_extractable = true and method != 'pdfminder') as doc
+          on td.id_llamado = doc.id_llamado)
+
+label_config:
+    name: 'effective_complaint'
+    query : 'bool_of_effective_complaints'
+
+features:
+    -
+        table: 'semantic.tenders'
+        columns:
+          - log_amt_planned_real_guarani
+          - tipo_procedimiento
+          - tipo_entidad
+          - _objeto_licitacion
+          - reception_month
+          - reception_day
+
+    -
+        table: 'semantic.tenders_procurement_type'
+        columns:
+          - tp_n_complaints
+          - tp_n_eff_complaints
+          - tp_n_cancelled_complaints
+          - tp_n_tenders_complaints
+          - tp_n_tenders_eff_complaints
+          - tp_n_tenders
+          - tp_avg_log_planned_real_value
+          - tp_median_log_planned_real_value
+          - tp_quarter_percentil_log_planned_real_value
+          - tp_seventy_five_percentil_log_planned_real_value
+          - tp_two_percentil_log_planned_real_value
+          - tp_ninety_eight_percentil_log_planned_real_value
+          - tp_total_n_bidders
+          - tp_avg_n_bidders
+          - tp_median_n_bidders
+          - tp_missing_bidders_data
+          - tp_unique_number_products
+          - tp_mean_number_products
+          - tp_median_number_products
+          - tp_p25_number_products
+          - tp_p75_number_products
+          - tp_n_complaints_3m
+          - tp_n_eff_complaints_3m
+          - tp_n_tenders_complaints_3m
+          - tp_n_tenders_eff_complaints_3m
+
+    -
+        table: 'semantic.tenders_agency_type'
+        columns:
+            - te_n_complaints
+            - te_n_eff_complaints
+            - te_n_cancelled_complaints
+            - te_n_tenders_complaints
+            - te_n_tenders_eff_complaints
+            - te_n_tenders
+            - te_avg_log_planned_real_value
+            - te_median_log_planned_real_value
+            - te_quarter_percentil_log_planned_real_value
+            - te_seventy_five_percentil_log_planned_real_value
+            - te_two_percentil_log_planned_real_value
+            - te_ninety_eight_percentil_log_planned_real_value
+            - te_total_n_bidders
+            - te_avg_n_bidders
+            - te_median_n_bidders
+            - te_missing_bidders_data
+            - te_unique_number_products
+            - te_mean_number_products
+            - te_median_number_products
+            - te_p25_number_products
+            - te_p75_number_products
+            - te_n_complaints_3m
+            - te_n_eff_complaints_3m
+            - te_n_tenders_complaints_3m
+            - te_n_tenders_eff_complaints_3m
+    -
+        table: 'semantic.tenders_agencies'
+        columns:
+            - n_complaints
+            - n_eff_complaints
+            - n_cancelled_complaints
+            - n_tenders_complaints
+            - n_tenders_eff_complaints
+            - n_tenders
+            - avg_log_planned_real_value
+            - median_log_planned_real_value
+            - quarter_percentil_log_planned_real_value
+            - seventy_five_percentil_log_planned_real_value
+            - two_percentil_log_planned_real_value
+            - ninety_eight_percentil_log_planned_real_value
+            - total_n_bidders
+            - avg_n_bidders
+            - median_n_bidders
+            - missing_bidders_data
+            - unique_number_products
+            - mean_number_products
+            - median_number_products
+            - p25_number_products
+            - p75_number_products
+            - n_complaints_3m
+            - n_eff_complaints_3m
+            - n_tenders_complaints_3m
+            - n_tenders_eff_complaints_3m
+    -
+        table: 'semantic.tenders_product_type'
+        columns:
+            - tc_n_complaints
+            - tc_n_eff_complaints
+            - tc_n_cancelled_complaints
+            - tc_n_tenders_complaints
+            - tc_n_tenders_eff_complaints
+            - tc_n_tenders
+            - tc_avg_log_planned_real_value
+            - tc_median_log_planned_real_value
+            - tc_quarter_percentil_log_planned_real_value
+            - tc_seventy_five_percentil_log_planned_real_value
+            - tc_two_percentil_log_planned_real_value
+            - tc_ninety_eight_percentil_log_planned_real_value
+            - tc_total_n_bidders
+            - tc_avg_n_bidders
+            - tc_median_n_bidders
+            - tc_missing_bidders_data
+            - tc_unique_number_products
+            - tc_mean_number_products
+            - tc_median_number_products
+            - tc_p25_number_products
+            - tc_p75_number_products
+            - tc_n_complaints_3m
+            - tc_n_eff_complaints_3m
+            - tc_n_tenders_complaints_3m
+            - tc_n_tenders_eff_complaints_3m
+    -
+        table: 'semantic.tenders_service_type'
+        columns:
+            - ts_n_complaints
+            - ts_n_eff_complaints
+            - ts_n_cancelled_complaints
+            - ts_n_tenders_complaints
+            - ts_n_tenders_eff_complaints
+            - ts_n_tenders
+            - ts_avg_log_planned_real_value
+            - ts_median_log_planned_real_value
+            - ts_quarter_percentil_log_planned_real_value
+            - ts_seventy_five_percentil_log_planned_real_value
+            - ts_two_percentil_log_planned_real_value
+            - ts_ninety_eight_percentil_log_planned_real_value
+            - ts_total_n_bidders
+            - ts_avg_n_bidders
+            - ts_median_n_bidders
+            - ts_missing_bidders_data
+            - ts_unique_number_products
+            - ts_mean_number_products
+            - ts_median_number_products
+            - ts_p25_number_products
+            - ts_p75_number_products
+            - ts_n_complaints_3m
+            - ts_n_eff_complaints_3m
+            - ts_n_tenders_complaints_3m
+            - ts_n_tenders_eff_complaints_3m
+
+validation:
+    method: 'temporal-folding'
+    parameters:
+        as_of_date: '2013-01-01'
+        train_lag: 'all'
+        test_lag: 365
+        aod_lag: 182
+        blind_gap: 90
+        number_of_folds: null
+        test_date_limit: '2019-01-31'
+
+evaluation:
+    metrics: [recall, precision, f1]
+    parameters: 
+        at%: [5, 10, 15, 20,  30,  40,  50,  70,  90]
+        lower_bound: 1
+        upper_bound: 30
+    groups:
+        CD: director1
+        CO: director2
+        LPN: director3
+        LPI: director3
+        LC: director3
+        CE: director3
+
+model_config:
+    random_seed: 22
+    max_seconds: 300 # 5 minutes max runtime
+    errors: false
+    
+textprocessing:
+    tfidf:
+        max_df: 1.0
+        max_features: 500
+        #ngram_range: (1, 1)
+        norm: 'l2'
+
+approaches:
+    -
+      approach_name: 'higher_than_x'
+      file_path: 'heuristic_approach.py'
+      preprocessors: []
+      hyperparameters:
+        heuristic:
+          params:
+            sorting:
+              -
+                column_name: log_amt_planned_real_guarani
+                higher: true
+    # -
+    #     approach_name: 'ada_boost'
+    #     file_path: 'generic_approach.py'
+    #     preprocessors: ['StandardScaler', 'OneHotEncoder']
+    #     hyperparameters:
+    #       algorithm:
+    #       - SAMME
+    #       - SAMME.R
+    #       n_estimators:
+    #       - 1
+    #       - 10
+    #       - 10000
+    -
+        approach_name: 'decision_tree'
+        file_path: 'generic_approach.py'
+        preprocessors: ['StandardScaler', 'OneHotEncoder']
+        hyperparameters:
+          criterion:
+          - gini
+          - entropy
+          max_depth:
+          - 1
+          - 5
+          - 10
+          - 50
+          max_features:
+          - null
+          min_samples_split:
+          - 2
+          - 5
+          - 10
+    -
+        approach_name: 'extra_trees'
+        file_path: 'generic_approach.py'
+        preprocessors: ['StandardScaler', 'OneHotEncoder']
+        hyperparameters:
+          criterion:
+          - gini
+          # - entropy
+          max_depth:
+          # - 1
+          # - 5
+          - 10
+          max_features:
+          - sqrt
+          - log2
+          min_samples_split:
+          - 2
+          # - 5
+          n_estimators:
+          # - 1
+          - 10
+          # - 100
+          n_jobs:
+          - -1
+    # -
+    #     approach_name: 'gradient_boosting'
+    #     file_path: 'generic_approach.py'
+    #     preprocessors: ['StandardScaler', 'OneHotEncoder']
+    #     hyperparameters:
+    #       learning_rate:
+    #       - 0.001
+    #       - 0.01
+    #       - 0.05
+    #       - 0.1
+    #       - 0.5
+    #       max_depth:
+    #       - 1
+    #       - 3
+    #       - 5
+    #       - 20
+    #       n_estimators:
+    #       - 1
+    #       - 10
+    #       - 500
+    #       subsample:
+    #       - 0.1
+    #       - 0.5
+    #       - 1.0
+
+    -
+        approach_name: 'knn'
+        file_path: 'generic_approach.py'
+        preprocessors: ['StandardScaler', 'OneHotEncoder']
+        hyperparameters:
+          algorithm:
+          - auto
+          # - ball_tree
+          # - kd_tree
+          n_neighbors:
+          # - 1
+          # - 5
+          - 10
+          # - 50
+          weights:
+          # - uniform
+          - distance
+    -
+        approach_name: 'logistic_regression'
+        file_path: 'generic_approach.py'
+        preprocessors: ['StandardScaler', 'OneHotEncoder']
+        hyperparameters:
+          C:
+          - 1.0e-05
+          - 0.0001
+          - 0.001
+          - 1
+          - 10
+          penalty:
+          - l1
+          - l2
+    -
+        approach_name: 'random_forest'
+        file_path: 'generic_approach.py'
+        preprocessors: ['StandardScaler', 'OneHotEncoder']
+        hyperparameters:
+          max_depth:
+          # - 1
+          # - 5
+          - 10
+          max_features:
+          - sqrt
+          # - log2
+          min_samples_split:
+          - 2
+          # - 5
+          # - 10
+          n_estimators:
+          # - 1
+          # - 10
+          - 100
+          n_jobs:
+          - -1
+    -
+        approach_name: 'svm'
+        file_path: 'generic_approach.py'
+        preprocessors: ['StandardScaler', 'OneHotEncoder']
+        hyperparameters:
+          C:
+          # - 1.0e-05
+          - 0.0001
+          # - 0.001
+          - 0.01
+          # - 0.1
+          - 1
+          # - 10
+          kernel:
+          - linear
+    -
+        approach_name: 'lgbm'
+        file_path: 'generic_approach.py'
+        preprocessors: ['StandardScaler', 'OneHotEncoder']
+        hyperparameters:
+          max_depth:
+            # - 5
+            # - 10
+            - 50
+          boosting_type:
+            - 'gbdt'
+            # - 'dart'
+            # - 'goss'
+            # - 'rf'
+          min_child_weight:
+            # - 1.0e-5
+            - 1.0e-2
+            - 1
+            # - 1.0e2
+          verbose:
+            - -1
+    -
+        approach_name: 'xgb'
+        file_path: 'generic_approach.py'
+        preprocessors: ['StandardScaler', 'OneHotEncoder']
+        hyperparameters:
+          max_depth:
+            # - 3
+            # - 5
+            - 10
+          min_child_weight:
+            - 1.0e-5
+            # - 1.0e-2
+            - 1
+            - 1.0e2
+          scale_pos_weight:
+            # - 1
+            # - 5
+            - 10
+          learning_rate:
+            # - 0.05
+            - 1
+            - 0.3
+

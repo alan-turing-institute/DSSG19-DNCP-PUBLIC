@@ -1,0 +1,45 @@
+user_metadata:
+    label_definition: 'effect_complaint'
+    team:
+    author: 'wennssssssasds'
+
+cohort_config:
+    name: 'test_cohort'
+    tender_type: 'Contratacion Directa'
+    query: |
+        select id_llamado::int from semantic.tenders
+
+label_config:
+    name: 'effective_complaint'
+    query : 'bool_of_effective_complaints'
+
+
+features:
+    -
+        table: 'semantic.tenders'
+        columns:
+            - 'log_amt_planned_real_guarani'
+
+approaches:
+    -
+        approach_name: 'dummy'
+        file_path: 'dummy_classifier.py'
+        hyperparameters:
+            perc_complaint: [3]
+            hyper: [3, 6]
+            hofus: [7, 10, 51]
+
+validation:
+    method: 'k-folding'
+    parameters:
+        number_of_folds: 5
+
+metrics:
+    - accuracy
+    - recall
+    - precision
+    - fake
+
+model_config:
+    test_ratio: 0.3
+    random_seed: 22

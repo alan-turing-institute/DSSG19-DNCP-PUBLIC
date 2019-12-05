@@ -1,0 +1,173 @@
+user_metadata:
+    label_definition:
+    team:
+    author: 'wennn'
+
+cohort_config:
+    name: 'test_cohort'
+    tender_type:
+    query: |
+        select id_llamado::int from semantic.tenders
+
+label_config:
+    name: 'effective_complaint'
+    query : 'bool_of_effective_complaints'
+
+features:
+    -
+        table: 'semantic.tenders'
+        columns:
+          - 'amt_planned_real_guarani'
+          - 'log_amt_planned_real_guarani'
+
+    -
+        table: 'semantic.tenders_agencies'
+        columns:
+          - 'municipality_bool'
+          - n_complaints
+          - n_eff_complaints
+          - n_cancelled_complaints
+          - n_tenders_complaints
+          - n_tenders_eff_complaints
+          # - avg_value_complaint
+          # - avg_value_eff_complaint
+          # - n_complaints_6m
+          # - n_eff_complaints_6m
+          # - n_tenders_complaints_6m
+          # - n_tenders_eff_complaints_6m
+          # - n_complaints_1y
+          # - n_eff_complaints_1y
+          # - n_tenders_complaints_1y
+          # - n_tenders_eff_complaints_1y
+
+approaches:
+
+  # model_list = {'random_forest': RandomForestClassifier(),
+  #       'extra_trees': ExtraTreesClassifier(),
+  #       'ada_boost': AdaBoostClassifier(),
+  #       'logistic_regression': LogisticRegression(),
+  #       'svm': svm.SVC(),
+  #       'gradient_boosting': GradientBoostingClassifier(),
+  #       'gaussian_nb': GaussianNB(),
+  #       'decision_tree': DecisionTreeClassifier(),
+  #       'sgd': SGDClassifier(),
+  #       'knn': KNeighborsClassifier()
+  #           }
+
+    -
+        approach_name: 'ada_boost'
+        file_path: 'generic_approach.py'
+        hyperparameters:
+          algorithm:
+          - SAMME
+          n_estimators:
+          - 10
+    -
+        approach_name: 'decision_tree'
+        file_path: 'generic_approach.py'
+        hyperparameters:
+          criterion:
+          - entropy
+          max_depth:
+          - 10
+          max_features:
+          - null
+          min_samples_split:
+          - 2
+    -
+        approach_name: 'extra_trees'
+        file_path: 'generic_approach.py'
+        hyperparameters:
+          criterion:
+          - gini
+          max_depth:
+          - 10
+          max_features:
+          - sqrt
+          min_samples_split:
+          - 2
+          n_estimators:
+          - 1
+          n_jobs:
+          - -1
+    # -
+    #     approach_name: 'gaussian_nb'
+    #     file_path: 'generic_approach.py'
+    #     hyperparameters:
+    #         {}
+    -
+        approach_name: 'gradient_boosting'
+        file_path: 'generic_approach.py'
+        hyperparameters:
+          learning_rate:
+          - 0.001
+          max_depth:
+          - 20
+          n_estimators:
+          - 500
+          subsample:
+          - 0.1
+
+    -
+        approach_name: 'knn'
+        file_path: 'generic_approach.py'
+        hyperparameters:
+          algorithm:
+          - kd_tree
+          n_neighbors:
+          - 1
+          weights:
+          - uniform
+    -
+        approach_name: 'logistic_regression'
+        file_path: 'generic_approach.py'
+        hyperparameters:
+          C:
+          - 1.0e-05
+          penalty:
+          - l1
+    -
+        approach_name: 'random_forest'
+        file_path: 'generic_approach.py'
+        hyperparameters:
+          max_depth:
+          - 1
+          max_features:
+          - log2
+          min_samples_split:
+          - 2
+          n_estimators:
+          - 1
+          n_jobs:
+          - -1
+    # -
+    #     approach_name: 'sgd'
+    #     file_path: 'generic_approach.py'
+    #     hyperparameters:
+    #       loss:
+    #       - hinge
+    #       penalty:
+    #       - l2
+    -
+        approach_name: 'svm'
+        file_path: 'generic_approach.py'
+        hyperparameters:
+          C:
+          - 10
+          kernel:
+          - linear
+
+
+validation:
+    method: 'k-folding'
+    parameters:
+        number_of_folds: 5
+
+metrics:
+    - recall
+    - precision
+    - accuracy
+
+model_config:
+    test_ratio: 0.3
+    random_seed: 22

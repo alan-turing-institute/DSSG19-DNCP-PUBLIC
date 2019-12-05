@@ -1,0 +1,54 @@
+user_metadata:
+    label_definition: 'effect_complaint'
+    team:
+    author: 'wennsssss'
+
+cohort_config:
+    name: 'test_cohort'
+    tender_type: 'Contratacion Directa'
+    query: |
+        select id_llamado::int from semantic.tenders
+        where lower(tipo_procedimiento_codigo) = 'cd'
+
+label_config:
+    name: 'effective_complaint'
+    query : 'bool_of_effective_complaints'
+
+
+features:
+    -
+        table: 'semantic.tenders'
+        columns:
+          - 'reception_year'
+          - 'reception_month'
+          - 'reception_date'
+
+approaches:
+    -
+        approach_name: 'dummy'
+        file_path: 'dummy_classifier.py'
+        hyperparameters:
+            perc_complaint: [3]
+            hyper: [3, 6]
+            hofus: [7, 10, 51]
+
+validation:
+    method: 'temporal-folding'
+    parameters:
+        as_of_date: '2012-05-24'
+        train_lag: 900
+        test_lag: 365
+        aod_lag: 182
+        blind_gap: 90
+        number_of_folds: null
+        test_date_limit: '2018-12-31'
+
+metrics:
+    - accuracy
+    - recall
+    - precision
+    - fake
+
+model_config:
+    test_ratio: 0.3
+    random_seed: 22

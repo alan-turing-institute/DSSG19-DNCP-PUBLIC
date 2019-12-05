@@ -1,0 +1,231 @@
+user_metadata:
+    label_definition:
+    team:
+    author: 'wennn'
+
+cohort_config:
+    name: 'test_cohort'
+    tender_type:
+    query: |
+        select id_llamado::int from semantic.tenders
+
+label_config:
+    name: 'effective_complaint'
+    query : 'bool_of_effective_complaints'
+
+features:
+    -
+        table: 'semantic.tenders'
+        columns:
+          - 'log_amt_planned_real_guarani'
+
+    -
+        table: 'semantic.tenders_agencies'
+        columns:
+          - 'municipality_bool'
+          - n_complaints
+          - n_eff_complaints
+          - n_cancelled_complaints
+          - n_tenders_complaints
+          - n_tenders_eff_complaints
+          - n_tenders
+          - avg_log_planned_real_value
+          # - n_complaints_6m
+          # - n_eff_complaints_6m
+          # - n_tenders_complaints_6m
+          # - n_tenders_eff_complaints_6m
+          # - n_complaints_1y
+          # - n_eff_complaints_1y
+          # - n_tenders_complaints_1y
+          # - n_tenders_eff_complaints_1y
+
+approaches:
+
+  # model_list = {'random_forest': RandomForestClassifier(),
+  #       'extra_trees': ExtraTreesClassifier(),
+  #       'ada_boost': AdaBoostClassifier(),
+  #       'logistic_regression': LogisticRegression(),
+  #       'svm': svm.SVC(),
+  #       'gradient_boosting': GradientBoostingClassifier(),
+  #       'gaussian_nb': GaussianNB(),
+  #       'decision_tree': DecisionTreeClassifier(),
+  #       'sgd': SGDClassifier(),
+  #       'knn': KNeighborsClassifier()
+  #           }
+
+    -
+        approach_name: 'ada_boost'
+        file_path: 'generic_approach_no_pre.py'
+        hyperparameters:
+          algorithm:
+          - SAMME
+          - SAMME.R
+          n_estimators:
+          - 1
+          - 10
+          - 10000
+    -
+        approach_name: 'decision_tree'
+        file_path: 'generic_approach_no_pre.py'
+        hyperparameters:
+          criterion:
+          - gini
+          - entropy
+          max_depth:
+          - 1
+          - 5
+          - 10
+          max_features:
+          - null
+          min_samples_split:
+          - 2
+          - 5
+          - 10
+    -
+        approach_name: 'extra_trees'
+        file_path: 'generic_approach_no_pre.py'
+        hyperparameters:
+          criterion:
+          - gini
+          - entropy
+          max_depth:
+          - 1
+          - 5
+          - 10
+          max_features:
+          - sqrt
+          - log2
+          min_samples_split:
+          - 2
+          - 5
+          n_estimators:
+          - 1
+          - 10
+          - 100
+          n_jobs:
+          - -1
+    # -
+    #     approach_name: 'gaussian_nb'
+    #     file_path: 'generic_approach_no_pre.py'
+    #     hyperparameters:
+    #         {}
+    -
+        approach_name: 'gradient_boosting'
+        file_path: 'generic_approach_no_pre.py'
+        hyperparameters:
+          learning_rate:
+          - 0.001
+          - 0.01
+          - 0.05
+          - 0.1
+          - 0.5
+          max_depth:
+          - 1
+          - 3
+          - 5
+          - 20
+          n_estimators:
+          - 1
+          - 10
+          - 500
+          subsample:
+          - 0.1
+          - 0.5
+          - 1.0
+
+    -
+        approach_name: 'knn'
+        file_path: 'generic_approach_no_pre.py'
+        hyperparameters:
+          algorithm:
+          - auto
+          - ball_tree
+          - kd_tree
+          n_neighbors:
+          - 1
+          - 5
+          - 10
+          - 50
+          weights:
+          - uniform
+          - distance
+    -
+        approach_name: 'logistic_regression'
+        file_path: 'generic_approach_no_pre.py'
+        hyperparameters:
+          C:
+          - 1.0e-05
+          - 0.0001
+          - 0.001
+          - 1
+          - 10
+          penalty:
+          - l1
+          - l2
+    -
+        approach_name: 'random_forest'
+        file_path: 'generic_approach_no_pre.py'
+        hyperparameters:
+          max_depth:
+          - 1
+          - 5
+          - 10
+          max_features:
+          - sqrt
+          - log2
+          min_samples_split:
+          - 2
+          - 5
+          - 10
+          n_estimators:
+          - 1
+          - 10
+          - 100
+          n_jobs:
+          - -1
+    # -
+    #     approach_name: 'sgd'
+    #     file_path: 'generic_approach_no_pre.py'
+    #     hyperparameters:
+    #       loss:
+    #       - hinge
+    #       - log
+    #       - perceptron
+    #       penalty:
+    #       - l2
+    #       - l1
+    #       - elasticnet
+    -
+        approach_name: 'svm'
+        file_path: 'generic_approach_no_pre.py'
+        hyperparameters:
+          C:
+          - 1.0e-05
+          - 0.0001
+          - 0.001
+          - 0.01
+          - 0.1
+          - 1
+          - 10
+          kernel:
+          - linear
+
+
+validation:
+    method: 'temporal-folding'
+    parameters:
+        as_of_date: '2013-01-01'
+        train_lag: 'all'
+        test_lag: 365
+        aod_lag: 182
+        blind_gap: 90
+        number_of_folds: null
+        test_date_limit: '2019-01-31'
+
+metrics:
+    - recall
+    - precision
+
+model_config:
+    test_ratio: 0.3
+    random_seed: 22

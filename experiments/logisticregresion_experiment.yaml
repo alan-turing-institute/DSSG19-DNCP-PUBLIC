@@ -1,0 +1,43 @@
+user_metadata:
+    label_definition:
+    team:
+    author: ''
+
+cohort_config:
+    name: 'test_cohort'
+    tender_type: 'Contratacion Directa'
+    query: |
+        select id_llamado::int from semantic.tenders
+
+label_config:
+    name: 'effective_complaint'
+    query : 'bool_of_effective_complaints'
+
+features:
+    -
+        table: 'semantic.tenders'
+        columns:
+          - 'amt_planned_real_guarani'
+
+approaches:
+    -
+        approach_name: 'logistic_regression'
+        file_path: 'logistic_regression.py'
+        hyperparameters:
+            penalty: ['l1','l2']
+            C: [0.00001, 0.001,0.1,1,10]
+            class_weight: [null, 'balanced']
+
+validation:
+    method: 'k-folding'
+    parameters:
+        number_of_folds: 5
+
+metrics:
+    - recall
+    - precision
+    - accuracy
+
+model_config:
+    test_ratio: 0.3
+    random_seed: 22

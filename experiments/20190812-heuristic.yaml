@@ -1,0 +1,72 @@
+user_metadata:
+    label_definition:
+    team:
+    author: 'Maria and Anna'
+
+cohort_config:
+    name: 'test_cohort'
+    tender_type:
+    query: |
+        select id_llamado::int from semantic.tenders
+        where tipo_procedimiento_codigo = 'CD'
+        or tipo_procedimiento_codigo = 'CO'
+        or tipo_procedimiento_codigo = 'LPN'
+        or tipo_procedimiento_codigo = 'CE'
+        or tipo_procedimiento_codigo = 'LC'
+        or tipo_procedimiento_codigo = 'LPI'
+
+label_config:
+    name: 'effective_complaint'
+    query : 'bool_of_effective_complaints'
+
+features:
+    -
+        table: 'semantic.tenders'
+        columns:
+          - log_amt_planned_real_guarani
+
+validation:
+    method: 'temporal-folding'
+    parameters:
+        as_of_date: '2013-01-01'
+        train_lag: 'all'
+        test_lag: 365
+        aod_lag: 182
+        blind_gap: 90
+        number_of_folds: null
+        test_date_limit: '2019-01-31'
+
+metrics:
+    - recall
+    - precision
+    - f1
+
+model_config:
+    random_seed: 22
+    max_seconds: 300 # 5 minutes max runtime
+
+approaches:
+  -
+    approach_name: 'higher_than_x'
+    file_path: 'heuristic_approach.py'
+    preprocessors: []
+    hyperparameters:
+      heuristic:
+        params:
+          sorting:
+            -
+              column_name: log_amt_planned_real_guarani
+              higher: true
+  -
+    approach_name: 'xgb'
+    file_path: 'generic_approach.py'
+    preprocessors: ['StandardScaler', 'OneHotEncoder']
+    hyperparameters:
+      max_depth:
+        - 10
+      min_child_weight:
+        - 1
+      scale_pos_weight:
+        - 10
+      learning_rate:
+        - 1

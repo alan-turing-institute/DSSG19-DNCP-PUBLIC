@@ -1,0 +1,218 @@
+approaches:
+- approach_name: logistic_regression
+  file_path: generic_approach.py
+  hyperparameters:
+    C:
+    - 1.0e-05
+    - 0.0001
+    - 0.001
+    - 1
+    - 10
+    penalty:
+    - l1
+    - l2
+  preprocessors:
+  - StandardScaler
+  - OneHotEncoder
+cohort_config:
+  name: test_cohort
+  query: "select td.id_llamado from (\n    (select id_llamado from semantic.tenders\n\
+    \    where tipo_procedimiento_codigo = 'CD') as td\n  inner join \n    (select\
+    \ id_llamado from semantic.documents\n    where is_extractable = true and method\
+    \ != 'pdfminder') as doc\n  on td.id_llamado = doc.id_llamado)\n"
+  tender_type: null
+evaluation:
+  groups:
+    CD: director1
+    CE: director3
+    CO: director2
+    LC: director3
+    LPI: director3
+    LPN: director3
+  metrics:
+  - recall
+  - precision
+  - f1
+  parameters:
+    at%:
+    - 5
+    - 10
+    - 15
+    - 20
+    - 30
+    - 40
+    - 50
+    - 70
+    - 90
+    lower_bound: 1
+    upper_bound: 30
+features:
+- columns:
+  - log_amt_planned_real_guarani
+  - tipo_procedimiento
+  - tipo_entidad
+  - _objeto_licitacion
+  - reception_month
+  - reception_day
+  table: semantic.tenders
+- columns:
+  - tp_n_complaints
+  - tp_n_eff_complaints
+  - tp_n_cancelled_complaints
+  - tp_n_tenders_complaints
+  - tp_n_tenders_eff_complaints
+  - tp_n_tenders
+  - tp_avg_log_planned_real_value
+  - tp_median_log_planned_real_value
+  - tp_quarter_percentil_log_planned_real_value
+  - tp_seventy_five_percentil_log_planned_real_value
+  - tp_two_percentil_log_planned_real_value
+  - tp_ninety_eight_percentil_log_planned_real_value
+  - tp_total_n_bidders
+  - tp_avg_n_bidders
+  - tp_median_n_bidders
+  - tp_missing_bidders_data
+  - tp_unique_number_products
+  - tp_mean_number_products
+  - tp_median_number_products
+  - tp_p25_number_products
+  - tp_p75_number_products
+  - tp_n_complaints_3m
+  - tp_n_eff_complaints_3m
+  - tp_n_tenders_complaints_3m
+  - tp_n_tenders_eff_complaints_3m
+  table: semantic.tenders_procurement_type
+- columns:
+  - te_n_complaints
+  - te_n_eff_complaints
+  - te_n_cancelled_complaints
+  - te_n_tenders_complaints
+  - te_n_tenders_eff_complaints
+  - te_n_tenders
+  - te_avg_log_planned_real_value
+  - te_median_log_planned_real_value
+  - te_quarter_percentil_log_planned_real_value
+  - te_seventy_five_percentil_log_planned_real_value
+  - te_two_percentil_log_planned_real_value
+  - te_ninety_eight_percentil_log_planned_real_value
+  - te_total_n_bidders
+  - te_avg_n_bidders
+  - te_median_n_bidders
+  - te_missing_bidders_data
+  - te_unique_number_products
+  - te_mean_number_products
+  - te_median_number_products
+  - te_p25_number_products
+  - te_p75_number_products
+  - te_n_complaints_3m
+  - te_n_eff_complaints_3m
+  - te_n_tenders_complaints_3m
+  - te_n_tenders_eff_complaints_3m
+  table: semantic.tenders_agency_type
+- columns:
+  - n_complaints
+  - n_eff_complaints
+  - n_cancelled_complaints
+  - n_tenders_complaints
+  - n_tenders_eff_complaints
+  - n_tenders
+  - avg_log_planned_real_value
+  - median_log_planned_real_value
+  - quarter_percentil_log_planned_real_value
+  - seventy_five_percentil_log_planned_real_value
+  - two_percentil_log_planned_real_value
+  - ninety_eight_percentil_log_planned_real_value
+  - total_n_bidders
+  - avg_n_bidders
+  - median_n_bidders
+  - missing_bidders_data
+  - unique_number_products
+  - mean_number_products
+  - median_number_products
+  - p25_number_products
+  - p75_number_products
+  - n_complaints_3m
+  - n_eff_complaints_3m
+  - n_tenders_complaints_3m
+  - n_tenders_eff_complaints_3m
+  table: semantic.tenders_agencies
+- columns:
+  - tc_n_complaints
+  - tc_n_eff_complaints
+  - tc_n_cancelled_complaints
+  - tc_n_tenders_complaints
+  - tc_n_tenders_eff_complaints
+  - tc_n_tenders
+  - tc_avg_log_planned_real_value
+  - tc_median_log_planned_real_value
+  - tc_quarter_percentil_log_planned_real_value
+  - tc_seventy_five_percentil_log_planned_real_value
+  - tc_two_percentil_log_planned_real_value
+  - tc_ninety_eight_percentil_log_planned_real_value
+  - tc_total_n_bidders
+  - tc_avg_n_bidders
+  - tc_median_n_bidders
+  - tc_missing_bidders_data
+  - tc_unique_number_products
+  - tc_mean_number_products
+  - tc_median_number_products
+  - tc_p25_number_products
+  - tc_p75_number_products
+  - tc_n_complaints_3m
+  - tc_n_eff_complaints_3m
+  - tc_n_tenders_complaints_3m
+  - tc_n_tenders_eff_complaints_3m
+  table: semantic.tenders_product_type
+- columns:
+  - ts_n_complaints
+  - ts_n_eff_complaints
+  - ts_n_cancelled_complaints
+  - ts_n_tenders_complaints
+  - ts_n_tenders_eff_complaints
+  - ts_n_tenders
+  - ts_avg_log_planned_real_value
+  - ts_median_log_planned_real_value
+  - ts_quarter_percentil_log_planned_real_value
+  - ts_seventy_five_percentil_log_planned_real_value
+  - ts_two_percentil_log_planned_real_value
+  - ts_ninety_eight_percentil_log_planned_real_value
+  - ts_total_n_bidders
+  - ts_avg_n_bidders
+  - ts_median_n_bidders
+  - ts_missing_bidders_data
+  - ts_unique_number_products
+  - ts_mean_number_products
+  - ts_median_number_products
+  - ts_p25_number_products
+  - ts_p75_number_products
+  - ts_n_complaints_3m
+  - ts_n_eff_complaints_3m
+  - ts_n_tenders_complaints_3m
+  - ts_n_tenders_eff_complaints_3m
+  table: semantic.tenders_service_type
+label_config:
+  name: effective_complaint
+  query: bool_of_effective_complaints
+model_config:
+  errors: false
+  max_seconds: 300
+  random_seed: 22
+textprocessing:
+  tfidf:
+    max_df: 1.0
+    max_features: 500
+    norm: l2
+user_metadata:
+  author: wen
+  label_definition: null
+  team: null
+validation:
+  method: temporal-folding
+  parameters:
+    aod_lag: 182
+    as_of_date: '2013-01-01'
+    blind_gap: 90
+    number_of_folds: null
+    test_date_limit: '2019-01-31'
+    test_lag: 365
+    train_lag: all
